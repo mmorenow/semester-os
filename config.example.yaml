@@ -1,0 +1,24 @@
+# Semester OS configuration. Copy to config.yaml (gitignored).
+# Every key is optional; unknown keys are refused at startup.
+# Reference: docs/configuration.md
+
+# IANA timezone for class times and notes. Env: SEMESTER_OS_TIMEZONE.
+timezone: America/Indiana/Indianapolis
+
+# Current term, shown in the UI and assigned to new courses.
+term: Fall 2026
+
+# Shown under the wordmark.
+school_name:
+
+# ICS feeds read every 30 minutes into Today and Week. https only.
+# These URLs are credentials. Never logged.
+# Env: SEMESTER_OS_OUTLOOK_ICS_URL, SEMESTER_OS_BRIGHTSPACE_ICS_URL.
+calendar_feeds:
+  # Outlook on the web: Settings > Calendar > Shared calendars > Publish a calendar, copy the ICS link.
+  outlook:
+  # Brightspace: Calendar > Subscribe, copy the feed URL.
+  brightspace:
+
+# Port on 127.0.0.1. Env: SEMESTER_OS_PORT.
+port: 8790

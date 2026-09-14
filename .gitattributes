@@ -1,0 +1,18 @@
+# Normalize text files to LF in the repository.
+* text=auto eol=lf
+
+# The POSIX launcher must keep LF even on a Windows checkout, or WSL cannot run it.
+semester-os text eol=lf
+*.sh text eol=lf
+
+# cmd.exe needs CRLF to parse labels and goto reliably.
+*.cmd text eol=crlf
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# Binary assets.
+*.png binary
+*.jpg binary
+*.ico binary
+*.pdf binary
+*.woff2 binary

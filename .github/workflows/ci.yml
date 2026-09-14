@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: ${{ matrix.os }} / Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python: ["3.11", "3.13"]
+    env:
+      SEMESTER_OS_NO_BROWSER: "1"
+      NO_COLOR: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: app/web/package-lock.json
+
+      # The same command a student runs: venv, requirements (with pytest),
+      # npm ci and the production web build (tsc -b && vite build).
+      - name: Setup
+        run: ./semester-os setup --dev --verbose
+
+      - name: Doctor
+        run: ./semester-os doctor
+
+      - name: Tests
+        run: app/server/.venv/bin/python -m pytest tests -q
+
+      - name: Smoke test the launcher
+        run: |
+          ./semester-os start --background --no-browser
+          ./semester-os status
+          curl -fsS http://127.0.0.1:8790/api/health
+          curl -fsS -o /dev/null http://127.0.0.1:8790/
+          ./semester-os stop
+
+      - name: Server log on failure
+        if: failure()
+        run: cat data/logs/server.log data/logs/setup.log 2>/dev/null || true

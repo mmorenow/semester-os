@@ -1,0 +1,57 @@
+[
+  {
+    "platform": "Brightspace",
+    "file": "brightspace.png",
+    "mono_file": null,
+    "source_url": "https://<institution>.brightspace.com/d2l/lp/web/faviconView?variant=0&version=1",
+    "format": "png",
+    "dimensions": "128x128",
+    "description": "Orange circle with white stylized B. The D2L Brightspace product mark, extracted as the largest layer of the .ico a live Brightspace instance serves.",
+    "brand_colors": [
+      "#E87511"
+    ],
+    "license_note": "Site favicon, nominative use in a local app. Trademark of D2L Corporation. No official SVG of this mark is published; D2L's own logo-guidelines page offers only EPS/PNG/JPG on request."
+  },
+  {
+    "platform": "Ed Discussion",
+    "file": "ed.png",
+    "mono_file": null,
+    "source_url": "https://edcdn.net/assets/apple-touch-icon.c861c403.png",
+    "format": "png",
+    "dimensions": "180x180",
+    "description": "Rounded square, indigo-to-magenta diagonal gradient, white lowercase ed.",
+    "brand_colors": [
+      "#6347B7",
+      "#8C47AD",
+      "#B347A4"
+    ],
+    "license_note": "Site apple-touch-icon from edstem.org's own CDN, nominative use in a local app. Ed publishes no SVG or larger raster; the web manifest's icon entries have empty src fields."
+  },
+  {
+    "platform": "Gradescope (square mark)",
+    "file": "gradescope-icon.png",
+    "mono_file": null,
+    "source_url": "https://cdn.gradescope.com/assets/logo/icons/64x64-3c29e9891a184582f67b6a2cd6c4a96bbfb20bbe7d7249d8f7feaa2ebd13832e.png",
+    "format": "png",
+    "dimensions": "64x64, transparent",
+    "description": "Bars mark alone, no wordmark. Use where the lockup is too wide. 64px is the largest size the CDN exposes; 128/180/192/512 all 404.",
+    "brand_colors": [
+      "#3F96F7"
+    ],
+    "license_note": "Site favicon from gradescope.com's own CDN, nominative use in a local app."
+  },
+  {
+    "platform": "iClicker",
+    "file": "iclicker.svg",
+    "mono_file": null,
+    "source_url": "https://student.iclicker.com/favicon.svg",
+    "format": "svg",
+    "dimensions": "200x200 viewBox",
+    "description": "Circle with a teal-to-cyan vertical gradient and the white iClicker play-triangle mark.",
+    "brand_colors": [
+      "#04B1A6",
+      "#00ABE0"
+    ],
+    "license_note": "Site favicon from the iClicker student web app, nominative use in a local app. Trademark of Macmillan Learning."
+  }
+]

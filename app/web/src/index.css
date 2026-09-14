@@ -1,0 +1,508 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+@import '@fontsource-variable/geist';
+@import '@fontsource-variable/geist-mono';
+
+@custom-variant dark (&:is(.dark *));
+
+/* Semester OS design tokens.
+
+   One accent (oklch hue 251.4) drives every interactive surface. Data colors never stand in for it:
+     signal-*  status: due soon, overdue, graded, run status
+     course-*  course identity, six named slots
+
+   Every pair is WCAG-checked in both themes: text clears 4.5:1, bar fills 3:1.
+
+   Radius scale (--radius 10px):
+     lg  10px  cards, popovers, sheets, dialogs
+     md   8px  buttons, inputs, selects, table controls
+     sm   6px  badges, chips, filter pills */
+
+:root {
+  --radius: 0.625rem;
+
+  --background: oklch(0.9842 0.0026 264);
+  --foreground: oklch(0.2103 0.0104 264);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.2103 0.0104 264);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2103 0.0104 264);
+
+  --primary: oklch(0.5 0.13 251.4);
+  --primary-foreground: oklch(0.9911 0.003 251.4);
+
+  --secondary: oklch(0.9455 0.0045 264);
+  --secondary-foreground: oklch(0.2103 0.0104 264);
+
+  --muted: oklch(0.9455 0.0045 264);
+  --muted-foreground: oklch(0.4761 0.0139 264);
+
+  --accent: oklch(0.9455 0.0045 264);
+  --accent-foreground: oklch(0.2103 0.0104 264);
+
+  --destructive: oklch(0.5504 0.1927 24.8);
+  --destructive-foreground: oklch(0.9911 0.003 24.8);
+
+  --border: oklch(0.9096 0.0074 264);
+  --input: oklch(0.8724 0.0089 264);
+  --ring: oklch(0.5 0.13 251.4);
+
+  /* Text-safe signal colors: 4.5:1 or better against the light background. */
+  --signal-green: oklch(0.5182 0.1181 156.2);
+  --signal-amber: oklch(0.53 0.11 66.4);
+  --signal-red: oklch(0.5504 0.1927 24.8);
+  --signal-neutral: oklch(0.5561 0.0139 264);
+
+  /* Fill-only variants for dots and bars (graphics need 3:1), so amber can stay amber. */
+  --signal-green-solid: oklch(0.62 0.15 156.2);
+  --signal-amber-solid: oklch(0.65 0.16 55);
+  --signal-red-solid: oklch(0.58 0.2 25);
+
+  /* Modal scrim. Tinted to the palette, never pure black. */
+  --scrim: oklch(0.21 0.0104 264 / 0.3);
+
+  /* Course identity: six slots, held for the semester.
+       1 brown, 2 sky, 3 slate, 4 violet, 5 green, 6 fuchsia
+
+     Brown and slate are deliberately subdued. Brown stays apart from `signal-amber` by lower chroma
+     and lightness (amber is never a fill); slate carries 16% of the accent's chroma.
+
+     Alphas: chip 28, week block 32/42, courses card 32/42, grade segment 28/38, course room 16,
+     watermark 16. Cap: 24% under `text-muted-foreground`, 42% under foreground ink. */
+  --course-1: oklch(0.44 0.085 62);
+  --course-2: oklch(0.55 0.096 220);
+  --course-3: oklch(0.47 0.021 255);
+  --course-4: oklch(0.55 0.17 285);
+  --course-5: oklch(0.55 0.164 145);
+  --course-6: oklch(0.55 0.17 350);
+}
+
+.dark {
+  --background: oklch(0.1712 0.006 264);
+  --foreground: oklch(0.9491 0.004 264);
+
+  --card: oklch(0.2016 0.007 264);
+  --card-foreground: oklch(0.9491 0.004 264);
+  --popover: oklch(0.2278 0.008 264);
+  --popover-foreground: oklch(0.9491 0.004 264);
+
+  --primary: oklch(0.649 0.137 251.4);
+  --primary-foreground: oklch(0.1712 0.02 251.4);
+
+  --secondary: oklch(0.2506 0.008 264);
+  --secondary-foreground: oklch(0.9491 0.004 264);
+
+  --muted: oklch(0.2278 0.008 264);
+  --muted-foreground: oklch(0.7118 0.014 264);
+
+  --accent: oklch(0.2506 0.008 264);
+  --accent-foreground: oklch(0.9491 0.004 264);
+
+  --destructive: oklch(0.6837 0.1571 24.8);
+  --destructive-foreground: oklch(0.1712 0.02 24.8);
+
+  --border: oklch(0.29 0.009 264);
+  --input: oklch(0.33 0.009 264);
+  --ring: oklch(0.649 0.137 251.4);
+
+  --signal-green: oklch(0.7211 0.1257 156.2);
+  --signal-amber: oklch(0.7873 0.1263 76.4);
+  --signal-red: oklch(0.6837 0.1571 24.8);
+  --signal-neutral: oklch(0.6 0.014 264);
+
+  /* On the dark surface the text-safe values are already bright enough to
+     work as fills, so the two sets converge. */
+  --signal-green-solid: oklch(0.7211 0.1257 156.2);
+  --signal-amber-solid: oklch(0.7873 0.1263 76.4);
+  --signal-red-solid: oklch(0.6837 0.1571 24.8);
+
+  --scrim: oklch(0.1 0.006 264 / 0.62);
+
+  /* Vivid slots at L 0.70. Brown drops to 0.60 to stay brown; slate rises to 0.72 to lift off the
+     card (0.74 puts the 42% week block at 4.46:1 under `text-foreground/75`, failing AA). */
+  --course-1: oklch(0.6 0.088 62);
+  --course-2: oklch(0.7 0.121 220);
+  --course-3: oklch(0.72 0.021 255);
+  --course-4: oklch(0.7 0.156 285);
+  --course-5: oklch(0.7 0.17 145);
+  --course-6: oklch(0.7 0.17 350);
+}
+
+@theme inline {
+  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, SFMono-Regular, 'SF Mono', monospace;
+  --font-heading: var(--font-sans);
+
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: 1rem;
+
+  /* Motion. Not --ease-out: Tailwind v4 defines it, and overriding would re-time every transition.
+       enter  out-cubic     arriving, leaving, decaying
+       shift  in-out-cubic  something on screen changing position */
+  --ease-enter: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --ease-shift: cubic-bezier(0.645, 0.045, 0.355, 1);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-signal-green: var(--signal-green);
+  --color-signal-amber: var(--signal-amber);
+  --color-signal-red: var(--signal-red);
+  --color-signal-neutral: var(--signal-neutral);
+  --color-signal-green-solid: var(--signal-green-solid);
+  --color-signal-amber-solid: var(--signal-amber-solid);
+  --color-signal-red-solid: var(--signal-red-solid);
+
+  --color-course-1: var(--course-1);
+  --color-course-2: var(--course-2);
+  --color-course-3: var(--course-3);
+  --color-course-4: var(--course-4);
+  --color-course-5: var(--course-5);
+  --color-course-6: var(--course-6);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    @apply font-sans;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Focus is always the locked accent, never a browser default. */
+  :focus-visible {
+    @apply outline-ring outline-2 outline-offset-2;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklch, var(--primary) 30%, transparent);
+  }
+
+  /* A search hit is the accent, never the browser's yellow. */
+  mark {
+    background-color: color-mix(in oklch, var(--primary) 20%, transparent);
+    color: var(--foreground);
+    border-radius: 2px;
+  }
+
+  /* Calm scrollbars. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--border);
+    border-radius: 999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--input);
+    background-clip: content-box;
+  }
+}
+
+@layer components {
+  /* Organization colors are categorical wayfinding in the experience bank.
+     They never replace the app accent or semantic status colors. */
+  .org-branded {
+    --org-accent: var(--org-accent-light);
+  }
+
+  .dark .org-branded {
+    --org-accent: var(--org-accent-dark);
+  }
+
+  .org-group-heading {
+    background-color: color-mix(in srgb, var(--org-accent) 18%, var(--card));
+  }
+
+  .org-mark {
+    color: color-mix(in srgb, var(--org-accent) 58%, var(--foreground));
+    background-color: color-mix(in srgb, var(--org-accent) 22%, transparent);
+    outline: 1px solid color-mix(in srgb, var(--org-accent) 38%, transparent);
+    outline-offset: -1px;
+  }
+
+  .org-bullet {
+    background-color: color-mix(in srgb, var(--org-accent) 10%, var(--card));
+    border-color: color-mix(in srgb, var(--org-accent) 20%, var(--border));
+  }
+
+  .org-bullet-id {
+    color: var(--foreground);
+  }
+
+  /* Every number in the product lines up: mono, tabular, no ligature drift. */
+  .num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+
+  /* School display tier: the largest type is always a number or course code, in Geist Mono. */
+
+  .display-num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 2.125rem; /* 34px */
+    font-weight: 650;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .figure-num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 1.375rem; /* 22px */
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.015em;
+  }
+
+  .code-display {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 1.75rem; /* 28px */
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: 0.01em; /* tracked OUT: an identifier, not a quantity */
+  }
+
+  .lede {
+    font-size: 1rem; /* 16px */
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  /* The unit glyph after a display figure: "34" is the value, "%" the unit. */
+  .display-unit {
+    font-size: 0.58em;
+    font-weight: 400;
+    color: var(--muted-foreground);
+    margin-left: 0.08em;
+  }
+
+  /* Named zones ("Grade center", "Meets", "Due"): 17px, one step above the 16px `.lede`. */
+  .section-title {
+    font-size: 1.0625rem; /* 17px */
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+
+  /* School focus ring: background gap, then accent. A box-shadow, not an offset outline, so it
+     doesn't bleed on tinted or clipped surfaces. Never transitioned. */
+
+  .focus-ring:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--background),
+      0 0 0 4px var(--ring);
+  }
+
+  /* The same ring drawn inward, for a full-bleed row inside a clipped panel. */
+  .focus-ring-inset:focus-visible {
+    outline: none;
+    box-shadow:
+      inset 0 0 0 2px var(--background),
+      inset 0 0 0 4px var(--ring);
+  }
+
+  /* Ring drawn by a card for its overlay link, which sits inside the card's `overflow-hidden` and
+     can't paint its own. `> a` keeps nested chips ringing only themselves. */
+  .focus-ring-overlay:has(> a:focus-visible) {
+    box-shadow:
+      0 0 0 2px var(--background),
+      0 0 0 4px var(--ring);
+  }
+
+  /* One-shot wash on a row whose number moved. 12% max: signal text on a 14% wash fails in light (4.45:1). */
+
+  /* Ink firming behind the settling value: 0.72 to 1 over 160ms, once. */
+  .settle-ink {
+    animation: settle-ink 160ms var(--ease-enter) 1 both;
+  }
+
+  /* External layer reveal, applied only on the render the user toggled it on. 220ms, transform and opacity. */
+
+  .external-enter {
+    animation: external-enter 220ms var(--ease-enter) 1 both;
+  }
+
+  .grade-wash-up {
+    animation: grade-wash-up 600ms var(--ease-enter) 1 both;
+  }
+
+  .grade-wash-down {
+    animation: grade-wash-down 600ms var(--ease-enter) 1 both;
+  }
+
+  /* Platform brand marks: brand color at rest where the hex clears 3:1 on --card in that theme,
+     monochrome otherwise. */
+
+  /* A single-path glyph, painted through a mask: brand hex where this theme
+     has one, the current text color where it does not. */
+  .brand-mark-mono {
+    display: block;
+    height: 100%;
+    width: 100%;
+    background-color: currentColor;
+    mask-image: var(--brand-src);
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-image: var(--brand-src);
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    transition: background-color 120ms ease;
+  }
+
+  /* A raster or multi-color mark cannot be repainted, so it either keeps its
+     own colors or, where they fail the gate, desaturates. */
+  .brand-mark-raster {
+    display: block;
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+    filter: grayscale(1);
+    transition: filter 120ms ease;
+  }
+}
+
+/* The custom property comes from `platform-identity.ts` and is absent where the hex failed, so
+   `var(..., currentColor)` is the fallback. Ed is mono in dark, iClicker in light. */
+html:not(.dark) .brand-mark-mono {
+  background-color: var(--brand-light, currentColor);
+}
+html.dark .brand-mark-mono {
+  background-color: var(--brand-dark, currentColor);
+}
+html:not(.dark) .brand-mark-raster[data-brand-light] {
+  filter: none;
+}
+html.dark .brand-mark-raster[data-brand-dark] {
+  filter: none;
+}
+
+@keyframes settle-ink {
+  from {
+    opacity: 0.72;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes external-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes grade-wash-up {
+  from {
+    background-color: color-mix(in oklch, var(--signal-green) 12%, transparent);
+  }
+  to {
+    background-color: transparent;
+  }
+}
+
+@keyframes grade-wash-down {
+  from {
+    background-color: color-mix(in oklch, var(--signal-red) 12%, transparent);
+  }
+  to {
+    background-color: transparent;
+  }
+}
+
+/* Reduced motion collapses every transition and the one semantic pulse. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Global activity bar, the app's only looping animation. A 25%-wide segment sweeps from -100% to
+   400% of its width: transform only, 1.4s `ease` (the slow ends happen off screen).
+
+   Reduced motion is handled in `use-reduced-motion.ts`. The media block below covers the frame
+   before the hook reads the query, restating the still state so the global collapse doesn't
+   freeze the segment off screen. */
+
+@keyframes activity-sweep {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(400%);
+  }
+}
+
+.activity-sweep {
+  animation: activity-sweep 1400ms ease infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .activity-sweep {
+    animation: none !important;
+    transform: none !important;
+    width: 100% !important;
+    opacity: 0.4;
+  }
+}

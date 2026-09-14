@@ -1,0 +1,15 @@
+# Semester OS server. Python 3.11 or newer.
+fastapi>=0.115,<1.0
+uvicorn[standard]>=0.30,<1.0
+pydantic>=2.7,<3.0
+# config.yaml at the repository root. safe_load only; see config.py.
+PyYAML>=6.0,<7.0
+# The calendar spine. icalendar parses the Outlook and Brightspace feeds;
+# recurring-ical-events expands their RRULEs, EXDATEs and overrides into the
+# dated occurrences external_events stores. Writing that expansion by hand is
+# how calendars get subtly wrong twice a year.
+icalendar>=6.0,<7.0
+recurring-ical-events>=3.2,<4.0
+# zoneinfo reads the operating system's timezone database, and Windows has none.
+# (icalendar pulls tzdata in today; this keeps config.py working if it stops.)
+tzdata>=2024.1; sys_platform == "win32"
